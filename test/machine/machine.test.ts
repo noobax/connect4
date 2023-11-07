@@ -84,23 +84,38 @@ describe("pickColor", () => {
 	describe("dropToken", () => {
 		const machine = makeMachine(GameStates.PLAY, {
 			players: [{id: "1", name: "1", color: PlayerColors.YELLOW},
-				{id: "1", name: "1", color: PlayerColors.YELLOW}],
+				{id: "2", name: "2", color: PlayerColors.RED}],
 			currentPlayer: "1",
-		grid: [
-			['E'], ['E'], ['E'], ['E'], ['E'], ['E'], ['E'],
-			['E'], ['E'], ['E'], ['E'], ['E'], ['E'], ['E'],
-			['E'], ['E'], ['E'], ['E'], ['E'], ['E'], ['E'],
-			['E'], ['E'], ['E'], ['E'], ['E'], ['E'], ['E'],
-			['E'], ['E'], ['E'], ['E'], ['E'], ['E'], ['E'],
-			['E'], ['E'], ['E'], ['E'], ['E'], ['E'], ['E'],
-		]
+			grid: [
+				['E', 'E', 'E', 'E', 'E', 'E', 'E'],
+				['E', 'E', 'E', 'E', 'E', 'E', 'E'],
+				['E', 'E', 'E', 'E', 'E', 'E', 'E'],
+				['E', 'E', 'E', 'E', 'E', 'E', 'E'],
+				['E', 'E', 'E', 'E', 'E', 'E', 'E'],
+				['E', 'E', 'E', 'E', 'E', 'E', 'E']
+			]
 		})
 
 		it("shoud drop a yellow token", () => {
-			expect(canDropTokenGuard(machine.state.context, dropTokenAction("1", 1))).toBe(true)
-			//expect(GameMachine.send(GameModel.events.dropToken("1", 1)).changed).toBe(true)
+			expect(machine.send(GameModel.events.dropToken("1", 2)).changed).toBe(true)
+			expect(machine.state.context.grid[5][2]).toBe(PlayerColors.RED)
+			expect(machine.state.context.currentPlayer).toBe("2")
 		})
-			
+
+		machine.state.context.grid = [
+			['R', 'R', 'E', 'R', 'R', 'R', 'R'],
+			['R', 'R', 'R', 'R', 'R', 'R', 'R'],
+			['R', 'R', 'R', 'R', 'R', 'R', 'R'],
+			['R', 'R', 'R', 'R', 'R', 'R', 'R'],
+			['R', 'R', 'R', 'R', 'R', 'R', 'R'],
+			['R', 'R', 'R', 'R', 'R', 'R', 'R']
+		]
+
+		it("should set state to draw", () => {
+			expect(machine.send(GameModel.events.dropToken("1", 2)).changed).toBe(false)
+			expect(machine.state.context.grid[0][2]).toBe(PlayerColors.YELLOW)
+			expect(machine.state.value).toBe('PLAY')
+		})
 	})
 })
 

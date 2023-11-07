@@ -11,12 +11,12 @@ export const GameModel = createModel({
 	rowLength: 4,
 	winningPos: {} as Position,
 	grid: [
-		['E'], ['E'], ['E'], ['E'], ['E'], ['E'], ['E'],
-		['E'], ['E'], ['E'], ['E'], ['E'], ['E'], ['E'],
-		['E'], ['E'], ['E'], ['E'], ['E'], ['E'], ['E'],
-		['E'], ['E'], ['E'], ['E'], ['E'], ['E'], ['E'],
-		['E'], ['E'], ['E'], ['E'], ['E'], ['E'], ['E'],
-		['E'], ['E'], ['E'], ['E'], ['E'], ['E'], ['E'],
+		['E', 'E', 'E', 'E', 'E', 'E', 'E'],
+		['E', 'E', 'E', 'E', 'E', 'E', 'E'],
+		['E', 'E', 'E', 'E', 'E', 'E', 'E'],
+		['E', 'E', 'E', 'E', 'E', 'E', 'E'],
+		['E', 'E', 'E', 'E', 'E', 'E', 'E'],
+		['E', 'E', 'E', 'E', 'E', 'E', 'E']
 	] as GridState,
 	}, {
 	events: {
@@ -61,26 +61,25 @@ export const GameMachine = GameModel.createMachine({
 		},
 		[GameStates.PLAY]: {
 			on: {
-				dropToken: [{
-					cond: isDrawMoveGuard,
-					target: GameStates.DRAW,
-					actions: [GameModel.assign(dropTokenAction)]
-				}, {
-					cond: isWinningMoveGuard,
-					target: GameStates.VICTORY,
-					actions: [GameModel.assign(dropTokenAction)]
-				}, {
+				dropToken: [
+					{
+						cond: isDrawMoveGuard,
+						target: GameStates.DRAW,
+						actions: [GameModel.assign(dropTokenAction)]
+					},
+					{
 					cond: canDropTokenGuard,
 					target: GameStates.PLAY,
 					actions: [GameModel.assign(dropTokenAction), GameModel.assign(switchPlayerAction)]
-				}]
-			},
+					}
+				]
+			}
 		},
 		[GameStates.VICTORY]: {
 			on: {
 				restart: {
 					target: GameStates.LOBBY,
-					actions: [GameModel.assign(restartGameAction)]
+					//actions: [GameModel.assign(restartGameAction)]
 				}
 			}
 		},
@@ -88,7 +87,7 @@ export const GameMachine = GameModel.createMachine({
 			on: {
 				restart: {
 					target: GameStates.LOBBY,
-					actions: [GameModel.assign(restartGameAction)]
+					//actions: [GameModel.assign(restartGameAction)]
 				}
 			}
 		}
@@ -96,13 +95,12 @@ export const GameMachine = GameModel.createMachine({
 })
 
 export function makeMachine(state: GameStates = GameStates.LOBBY, context: Partial<GameContext> = {}): InterpreterFrom<typeof GameMachine> {
-	return interpret(
+	const machine =  interpret(
 		GameMachine.withContext({
 			...GameModel.initialContext,
-			...context}
-		).withConfig({
-			...GameMachine.config,
-			initial: state
-		} as any)
+			...context
+		})
 	).start()
+	machine.state.value = state
+	return machine
 }

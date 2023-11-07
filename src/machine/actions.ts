@@ -28,12 +28,10 @@ export const switchPlayerAction: GameAction<"dropToken"> = (content) => ({
 })
 
 export const dropTokenAction: GameAction<"dropToken"> = (context, event) => {
+	const newGrid = context.grid 
 	const y = emptyCellRow(context.grid, event.x)
-	if (y >= 0)
-		return {grid: context.grid.map((row, j) => {
-			if (j === y)
-				row[event.x] = context.players.filter(p => p.id === event.playerId)[0].color
-		})}
+	newGrid[y][event.x] = context.players.filter(p => p.id === event.playerId)[0].color
+	return { grid: newGrid }
 }
 
 export const restartGameAction: GameAction<"restart"> = () => ({

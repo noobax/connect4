@@ -75,5 +75,23 @@ describe("machine/guards", () => {
 			expect(machine.send(GameModel.events.start('1')).changed).toBe(false)
 		})
 	})
+	/*
+	describe("canStartGuard", () => {
+		let machine: InterpreterFrom<typeof GameMachine>
+
+		beforeEach(() => {
+			machine = interpret(GameMachine).start()
+		})
+		it("shoud let the token be droped", () => {
+			expect(machine.send(GameModel.events.join("1", "1")).changed).toBe(true)
+			expect(machine.send(GameModel.events.join("2", "1")).changed).toBe(true)
+			expect(machine.send(GameModel.events.pickColor('1', PlayerColors.RED)).changed).toBe(true)
+			expect(machine.send(GameModel.events.pickColor('2', PlayerColors.YELLOW)).changed).toBe(true)
+			expect(machine.send(GameModel.events.start('1')).changed).toBe(true)
+			expect(machine.send(GameModel.events.dropToken('1', 2)).changed).toBe(true)
+		})
+	})
+	*/
+
 })
 
