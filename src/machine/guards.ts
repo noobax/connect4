@@ -27,10 +27,9 @@ export const canDropTokenGuard: GameGuard<"dropToken"> = (context, event) => {
 }
 
 export const isWinningMoveGuard: GameGuard<"dropToken"> = (context, event) => {
-	return canDropTokenGuard(context, event) && 
-		winningRowPosition(context.grid, 
-			context.players.filter(p => p.id === event.playerId)[0].id, 
-			event.x, context.rowLength).length > 0
+	const color = context.players.filter(p => p.id === event.playerId)[0].color
+	return canDropTokenGuard(context, event) && color &&
+		winningRowPosition(context.grid, color, event.x, context.rowLength).length > 0
 }
 
 export const isDrawMoveGuard: GameGuard<"dropToken"> = (context, event) => {

@@ -98,23 +98,50 @@ describe("pickColor", () => {
 
 		it("shoud drop a yellow token", () => {
 			expect(machine.send(GameModel.events.dropToken("1", 2)).changed).toBe(true)
-			expect(machine.state.context.grid[5][2]).toBe(PlayerColors.RED)
+			expect(machine.state.context.grid[5][2]).toBe('Y')
 			expect(machine.state.context.currentPlayer).toBe("2")
 		})
-
-		machine.state.context.grid = [
-			['R', 'R', 'E', 'R', 'R', 'R', 'R'],
-			['R', 'R', 'R', 'R', 'R', 'R', 'R'],
-			['R', 'R', 'R', 'R', 'R', 'R', 'R'],
-			['R', 'R', 'R', 'R', 'R', 'R', 'R'],
-			['R', 'R', 'R', 'R', 'R', 'R', 'R'],
-			['R', 'R', 'R', 'R', 'R', 'R', 'R']
-		]
+	})
+	describe("dropToken", () => {
+		const machine = makeMachine(GameStates.PLAY, {
+			players: [{id: "1", name: "1", color: PlayerColors.YELLOW},
+				{id: "2", name: "2", color: PlayerColors.RED}],
+			currentPlayer: "1",
+			grid: [
+				['R', 'R', 'E', 'R', 'R', 'R', 'R'],
+				['R', 'R', 'R', 'R', 'R', 'R', 'R'],
+				['R', 'R', 'R', 'R', 'R', 'R', 'R'],
+				['R', 'R', 'R', 'R', 'R', 'R', 'R'],
+				['R', 'R', 'R', 'R', 'R', 'R', 'R'],
+				['R', 'R', 'R', 'R', 'R', 'R', 'R']
+			]
+		})
 
 		it("should set state to draw", () => {
-			expect(machine.send(GameModel.events.dropToken("1", 2)).changed).toBe(false)
-			expect(machine.state.context.grid[0][2]).toBe(PlayerColors.YELLOW)
-			expect(machine.state.value).toBe('PLAY')
+			expect(machine.send(GameModel.events.dropToken("1", 2)).changed).toBe(true)
+			expect(machine.state.context.grid[0][2]).toBe('Y')
+			expect(machine.state.value).toBe('DRAW')
+		})
+	})
+	describe("dropToken", () => {
+		const machine = makeMachine(GameStates.PLAY, {
+			players: [{id: "1", name: "1", color: PlayerColors.YELLOW},
+				{id: "2", name: "2", color: PlayerColors.RED}],
+			currentPlayer: "2",
+			grid: [
+				['R', 'R', 'E', 'R', 'R', 'R', 'R'],
+				['R', 'R', 'R', 'R', 'R', 'R', 'R'],
+				['R', 'R', 'R', 'R', 'R', 'R', 'R'],
+				['R', 'R', 'R', 'R', 'R', 'R', 'R'],
+				['R', 'R', 'R', 'R', 'R', 'R', 'R'],
+				['R', 'R', 'R', 'R', 'R', 'R', 'R']
+			]
+		})
+
+		it("should set state to draw", () => {
+			expect(machine.send(GameModel.events.dropToken("2", 2)).changed).toBe(true)
+			expect(machine.state.context.grid[0][2]).toBe('R')
+			expect(machine.state.value).toBe('VICTORY')
 		})
 	})
 })

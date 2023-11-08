@@ -18,6 +18,11 @@ export type Position = {
 	y: number
 }
 
+export type Direction = {
+	i: number,
+	j: number
+}
+
 export type Size = {
 	i: number,
 	j: number

@@ -63,6 +63,11 @@ export const GameMachine = GameModel.createMachine({
 			on: {
 				dropToken: [
 					{
+						cond: isWinningMoveGuard,
+						target: GameStates.VICTORY,
+						actions: [GameModel.assign(dropTokenAction)]
+					},
+					{
 						cond: isDrawMoveGuard,
 						target: GameStates.DRAW,
 						actions: [GameModel.assign(dropTokenAction)]
@@ -79,7 +84,7 @@ export const GameMachine = GameModel.createMachine({
 			on: {
 				restart: {
 					target: GameStates.LOBBY,
-					//actions: [GameModel.assign(restartGameAction)]
+					actions: [GameModel.assign(restartGameAction)]
 				}
 			}
 		},
@@ -87,7 +92,7 @@ export const GameMachine = GameModel.createMachine({
 			on: {
 				restart: {
 					target: GameStates.LOBBY,
-					//actions: [GameModel.assign(restartGameAction)]
+					actions: [GameModel.assign(restartGameAction)]
 				}
 			}
 		}
